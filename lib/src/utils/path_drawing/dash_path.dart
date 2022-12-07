@@ -11,7 +11,7 @@ import 'dart:ui';
 /// Passing a `source` that is an empty path will return an empty path.
 Path dashPath(
   Path source, {
-  required CircularIntervalList<double> dashArray,
+  required CircularIntervalList<num> dashArray,
   DashOffset? dashOffset,
 }) {
   assert(dashArray != null); // ignore: unnecessary_null_comparison

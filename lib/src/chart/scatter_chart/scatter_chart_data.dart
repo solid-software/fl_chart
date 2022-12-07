@@ -57,7 +57,7 @@ class ScatterChartData extends AxisChartData with EquatableMixin {
           gridData: gridData ?? FlGridData(),
           touchData: scatterTouchData ?? ScatterTouchData(),
           titlesData: titlesData ?? FlTitlesData(),
-          clipData: clipData ?? FlClipData.none(),
+          clipData: clipData ?? const FlClipData.none(),
           minX: minX ??
               ScatterChartHelper.calculateMaxAxisValues(
                 scatterSpots ?? const [],

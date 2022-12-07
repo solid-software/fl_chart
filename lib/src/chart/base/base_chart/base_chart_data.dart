@@ -36,7 +36,8 @@ abstract class BaseChartData with EquatableMixin {
 }
 
 /// Holds data to drawing border around the chart.
-class FlBorderData with EquatableMixin {
+@immutable
+class FlBorderData {
   /// [show] Determines showing or hiding border around the chart.
   /// [border] Determines the visual look of 4 borders, see [Border].
   FlBorderData({
@@ -70,12 +71,16 @@ class FlBorderData with EquatableMixin {
     );
   }
 
-  /// Used for equality check, see [EquatableMixin].
   @override
-  List<Object?> get props => [
-        show,
-        border,
-      ];
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FlBorderData &&
+          runtimeType == other.runtimeType &&
+          show == other.show &&
+          border == other.border;
+
+  @override
+  int get hashCode => show.hashCode ^ border.hashCode;
 }
 
 /// Holds data to handle touch events, and touch responses in abstract way.
@@ -83,9 +88,10 @@ class FlBorderData with EquatableMixin {
 /// There is a touch flow, explained [here](https://github.com/imaNNeoFighT/fl_chart/blob/master/repo_files/documentations/handle_touches.md)
 /// in a simple way, each chart's renderer captures the touch events, and passes the pointerEvent
 /// to the painter, and gets touched spot, and wraps it into a concrete [BaseTouchResponse].
-abstract class FlTouchData<R extends BaseTouchResponse> with EquatableMixin {
+@immutable
+abstract class FlTouchData<R extends BaseTouchResponse> {
   /// You can disable or enable the touch system using [enabled] flag,
-  FlTouchData(
+  const FlTouchData(
     this.enabled,
     this.touchCallback,
     this.mouseCursorResolver,
@@ -104,19 +110,25 @@ abstract class FlTouchData<R extends BaseTouchResponse> with EquatableMixin {
   /// based on the provided [FlTouchEvent] and [BaseTouchResponse]
   final MouseCursorResolver<R>? mouseCursorResolver;
 
-  /// Used for equality check, see [EquatableMixin].
   @override
-  List<Object?> get props => [
-        enabled,
-        touchCallback,
-        mouseCursorResolver,
-      ];
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FlTouchData &&
+          runtimeType == other.runtimeType &&
+          enabled == other.enabled &&
+          touchCallback == other.touchCallback &&
+          mouseCursorResolver == other.mouseCursorResolver;
+
+  @override
+  int get hashCode =>
+      enabled.hashCode ^ touchCallback.hashCode ^ mouseCursorResolver.hashCode;
 }
 
 /// Holds data to clipping chart around its borders.
-class FlClipData with EquatableMixin {
+@immutable
+class FlClipData {
   /// Creates data that clips specified sides
-  FlClipData({
+  const FlClipData({
     required this.top,
     required this.bottom,
     required this.left,
@@ -124,18 +136,19 @@ class FlClipData with EquatableMixin {
   });
 
   /// Creates data that clips all sides
-  FlClipData.all() : this(top: true, bottom: true, left: true, right: true);
+  const FlClipData.all()
+      : this(top: true, bottom: true, left: true, right: true);
 
   /// Creates data that clips only top and bottom side
-  FlClipData.vertical()
+  const FlClipData.vertical()
       : this(top: true, bottom: true, left: false, right: false);
 
   /// Creates data that clips only left and right side
-  FlClipData.horizontal()
+  const FlClipData.horizontal()
       : this(top: false, bottom: false, left: true, right: true);
 
   /// Creates data that doesn't clip any side
-  FlClipData.none()
+  const FlClipData.none()
       : this(top: false, bottom: false, left: false, right: false);
   final bool top;
   final bool bottom;
@@ -161,9 +174,20 @@ class FlClipData with EquatableMixin {
     );
   }
 
-  /// Used for equality check, see [EquatableMixin].
   @override
-  List<Object?> get props => [top, bottom, left, right];
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is FlClipData &&
+            runtimeType == other.runtimeType &&
+            top == other.top &&
+            bottom == other.bottom &&
+            left == other.left &&
+            right == other.right;
+  }
+
+  @override
+  int get hashCode =>
+      top.hashCode ^ bottom.hashCode ^ left.hashCode ^ right.hashCode;
 }
 
 /// Chart's touch callback.

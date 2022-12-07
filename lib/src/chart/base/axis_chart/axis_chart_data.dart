@@ -29,11 +29,12 @@ abstract class AxisChartData extends BaseChartData with EquatableMixin {
     super.borderData,
     required super.touchData,
   })  : gridData = gridData ?? FlGridData(),
-        rangeAnnotations = rangeAnnotations ?? RangeAnnotations(),
+        rangeAnnotations = rangeAnnotations ?? const RangeAnnotations(),
         baselineX = baselineX ?? 0,
         baselineY = baselineY ?? 0,
-        clipData = clipData ?? FlClipData.none(),
+        clipData = clipData ?? const FlClipData.none(),
         backgroundColor = backgroundColor ?? Colors.transparent;
+
   final FlGridData gridData;
   final FlTitlesData titlesData;
   final RangeAnnotations rangeAnnotations;
@@ -125,7 +126,8 @@ Widget defaultGetTitle(double value, TitleMeta meta) {
 }
 
 /// Holds data for showing label values on axis numbers
-class SideTitles with EquatableMixin {
+@immutable
+class SideTitles {
   /// It draws some title on an axis, per axis values,
   /// [showTitles] determines showing or hiding this side,
   ///
@@ -195,18 +197,28 @@ class SideTitles with EquatableMixin {
     );
   }
 
-  /// Used for equality check, see [EquatableMixin].
   @override
-  List<Object?> get props => [
-        showTitles,
-        getTitlesWidget,
-        reservedSize,
-        interval,
-      ];
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is SideTitles &&
+            runtimeType == other.runtimeType &&
+            showTitles == other.showTitles &&
+            getTitlesWidget == other.getTitlesWidget &&
+            reservedSize == other.reservedSize &&
+            interval == other.interval;
+  }
+
+  @override
+  int get hashCode =>
+      showTitles.hashCode ^
+      getTitlesWidget.hashCode ^
+      reservedSize.hashCode ^
+      interval.hashCode;
 }
 
 /// Holds data for showing each side titles (left, top, right, bottom)
-class AxisTitles with EquatableMixin {
+@immutable
+class AxisTitles {
   /// you can provide [axisName] if you want to show a general
   /// label on this axis,
   ///
@@ -270,18 +282,28 @@ class AxisTitles with EquatableMixin {
     );
   }
 
-  /// Used for equality check, see [EquatableMixin].
   @override
-  List<Object?> get props => [
-        axisNameWidget,
-        axisNameSize,
-        sideTitles,
-        drawBelowEverything,
-      ];
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is AxisTitles &&
+            runtimeType == other.runtimeType &&
+            axisNameWidget == other.axisNameWidget &&
+            axisNameSize == other.axisNameSize &&
+            sideTitles == other.sideTitles &&
+            drawBelowEverything == other.drawBelowEverything;
+  }
+
+  @override
+  int get hashCode =>
+      axisNameWidget.hashCode ^
+      axisNameSize.hashCode ^
+      sideTitles.hashCode ^
+      drawBelowEverything.hashCode;
 }
 
 /// Holds data for showing titles on each side of charts.
-class FlTitlesData with EquatableMixin {
+@immutable
+class FlTitlesData {
   /// [show] determines showing or hiding all titles,
   /// [leftTitles], [topTitles], [rightTitles], [bottomTitles] defines
   /// side titles of left, top, right, bottom sides respectively.
@@ -356,25 +378,36 @@ class FlTitlesData with EquatableMixin {
     );
   }
 
-  /// Used for equality check, see [EquatableMixin].
   @override
-  List<Object?> get props => [
-        show,
-        leftTitles,
-        topTitles,
-        rightTitles,
-        bottomTitles,
-      ];
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FlTitlesData &&
+          runtimeType == other.runtimeType &&
+          show == other.show &&
+          leftTitles == other.leftTitles &&
+          topTitles == other.topTitles &&
+          rightTitles == other.rightTitles &&
+          bottomTitles == other.bottomTitles;
+
+  @override
+  int get hashCode =>
+      show.hashCode ^
+      leftTitles.hashCode ^
+      topTitles.hashCode ^
+      rightTitles.hashCode ^
+      bottomTitles.hashCode;
 }
 
 /// Represents a conceptual position in cartesian (axis based) space.
-class FlSpot with EquatableMixin {
+@immutable
+class FlSpot{
   /// [x] determines cartesian (axis based) horizontally position
   /// 0 means most left point of the chart
   ///
   /// [y] determines cartesian (axis based) vertically position
   /// 0 means most bottom point of the chart
   const FlSpot(this.x, this.y);
+
   final double x;
   final double y;
 
@@ -397,21 +430,28 @@ class FlSpot with EquatableMixin {
   /// Used for splitting lines, or maybe other concepts.
   static const FlSpot nullSpot = FlSpot(double.nan, double.nan);
 
+  static const double nullDoubleSpot = double.nan;
+
   /// Sets zero for x and y
   static const FlSpot zero = FlSpot(0, 0);
 
   /// Determines if [x] or [y] is null.
-  bool isNull() => this == nullSpot;
+  bool isNull() => x == nullDoubleSpot && y == nullDoubleSpot;
 
   /// Determines if [x] and [y] is not null.
   bool isNotNull() => !isNull();
 
-  /// Used for equality check, see [EquatableMixin].
+
   @override
-  List<Object?> get props => [
-        x,
-        y,
-      ];
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FlSpot &&
+          runtimeType == other.runtimeType &&
+          x == other.x &&
+          y == other.y;
+
+  @override
+  int get hashCode => x.hashCode ^ y.hashCode;
 
   /// Lerps a [FlSpot] based on [t] value, check [Tween.lerp].
   static FlSpot lerp(FlSpot a, FlSpot b, double t) {
@@ -431,7 +471,8 @@ class FlSpot with EquatableMixin {
 }
 
 /// Responsible to hold grid data,
-class FlGridData with EquatableMixin {
+@immutable
+class FlGridData {
   /// Responsible for rendering grid lines behind the content of charts,
   /// [show] determines showing or hiding all grids,
   ///
@@ -552,19 +593,32 @@ class FlGridData with EquatableMixin {
     );
   }
 
-  /// Used for equality check, see [EquatableMixin].
   @override
-  List<Object?> get props => [
-        show,
-        drawHorizontalLine,
-        horizontalInterval,
-        getDrawingHorizontalLine,
-        checkToShowHorizontalLine,
-        drawVerticalLine,
-        verticalInterval,
-        getDrawingVerticalLine,
-        checkToShowVerticalLine,
-      ];
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FlGridData &&
+          runtimeType == other.runtimeType &&
+          show == other.show &&
+          drawHorizontalLine == other.drawHorizontalLine &&
+          horizontalInterval == other.horizontalInterval &&
+          getDrawingHorizontalLine == other.getDrawingHorizontalLine &&
+          checkToShowHorizontalLine == other.checkToShowHorizontalLine &&
+          drawVerticalLine == other.drawVerticalLine &&
+          verticalInterval == other.verticalInterval &&
+          getDrawingVerticalLine == other.getDrawingVerticalLine &&
+          checkToShowVerticalLine == other.checkToShowVerticalLine;
+
+  @override
+  int get hashCode =>
+      show.hashCode ^
+      drawHorizontalLine.hashCode ^
+      horizontalInterval.hashCode ^
+      getDrawingHorizontalLine.hashCode ^
+      checkToShowHorizontalLine.hashCode ^
+      drawVerticalLine.hashCode ^
+      verticalInterval.hashCode ^
+      getDrawingVerticalLine.hashCode ^
+      checkToShowVerticalLine.hashCode;
 }
 
 /// Determines showing or hiding specified line.
@@ -583,7 +637,7 @@ typedef GetDrawingGridLine = FlLine Function(double value);
 
 /// Returns a grey line for all values.
 FlLine defaultGridLine(double value) {
-  return FlLine(
+  return const FlLine(
     color: Colors.blueGrey,
     strokeWidth: 0.4,
     dashArray: [8, 4],
@@ -591,14 +645,15 @@ FlLine defaultGridLine(double value) {
 }
 
 /// Defines style of a line.
-class FlLine with EquatableMixin {
+@immutable
+class FlLine {
   /// Renders a line, color it by [color],
   /// thickness is defined by [strokeWidth],
   /// and if you want to have dashed line, you should fill [dashArray],
   /// it is a circular array of dash offsets and lengths.
   /// For example, the array `[5, 10]` would result in dashes 5 pixels long
   /// followed by blank spaces 10 pixels long.
-  FlLine({
+  const FlLine({
     Color? color,
     double? strokeWidth,
     this.dashArray,
@@ -641,13 +696,18 @@ class FlLine with EquatableMixin {
     );
   }
 
-  /// Used for equality check, see [EquatableMixin].
   @override
-  List<Object?> get props => [
-        color,
-        strokeWidth,
-        dashArray,
-      ];
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FlLine &&
+          runtimeType == other.runtimeType &&
+          color == other.color &&
+          strokeWidth == other.strokeWidth &&
+          dashArray == other.dashArray;
+
+  @override
+  int get hashCode =>
+      color.hashCode ^ strokeWidth.hashCode ^ dashArray.hashCode;
 }
 
 /// holds information about touched spot on the axis based charts.
@@ -679,10 +739,11 @@ abstract class TouchedSpot with EquatableMixin {
 }
 
 /// Holds data for rendering horizontal and vertical range annotations.
-class RangeAnnotations with EquatableMixin {
+@immutable
+class RangeAnnotations {
   /// Axis based charts can annotate some horizontal and vertical regions,
   /// using [horizontalRangeAnnotations], and [verticalRangeAnnotations] respectively.
-  RangeAnnotations({
+  const RangeAnnotations({
     List<HorizontalRangeAnnotation>? horizontalRangeAnnotations,
     List<VerticalRangeAnnotation>? verticalRangeAnnotations,
   })  : horizontalRangeAnnotations = horizontalRangeAnnotations ?? const [],
@@ -724,12 +785,17 @@ class RangeAnnotations with EquatableMixin {
     );
   }
 
-  /// Used for equality check, see [EquatableMixin].
   @override
-  List<Object?> get props => [
-        horizontalRangeAnnotations,
-        verticalRangeAnnotations,
-      ];
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RangeAnnotations &&
+          runtimeType == other.runtimeType &&
+          horizontalRangeAnnotations == other.horizontalRangeAnnotations &&
+          verticalRangeAnnotations == other.verticalRangeAnnotations;
+
+  @override
+  int get hashCode =>
+      horizontalRangeAnnotations.hashCode ^ verticalRangeAnnotations.hashCode;
 }
 
 /// Defines an annotation region in y (vertical) axis.
