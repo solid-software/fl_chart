@@ -13,7 +13,8 @@ import 'package:flutter/material.dart' hide Image;
 ///
 /// It holds data needed to draw a line chart,
 /// including bar lines, spots, colors, touches, ...
-class LineChartData extends AxisChartData with EquatableMixin {
+@immutable
+class LineChartData extends AxisChartData {
   /// [LineChart] draws some lines in various shapes and overlaps them.
   /// lines are defined in [lineBarsData], sometimes you need to fill space between two bars
   /// with a color or gradient, you can use [betweenBarsData] to achieve that.
@@ -61,15 +62,15 @@ class LineChartData extends AxisChartData with EquatableMixin {
     super.backgroundColor,
   })  : lineBarsData = lineBarsData ?? const [],
         betweenBarsData = betweenBarsData ?? const [],
-        extraLinesData = extraLinesData ?? ExtraLinesData(),
+        extraLinesData = extraLinesData ?? const ExtraLinesData(),
         lineTouchData = lineTouchData ?? LineTouchData(),
         showingTooltipIndicators = showingTooltipIndicators ?? const [],
         super(
           gridData: gridData ?? FlGridData(),
           touchData: lineTouchData ?? LineTouchData(),
           titlesData: titlesData ?? FlTitlesData(),
-          rangeAnnotations: rangeAnnotations ?? RangeAnnotations(),
-          clipData: clipData ?? FlClipData.none(),
+          rangeAnnotations: rangeAnnotations ?? const RangeAnnotations(),
+          clipData: clipData ?? const FlClipData.none(),
           minX: minX ??
               LineChartHelper.calculateMaxAxisValues(lineBarsData ?? const [])
                   .minX,
@@ -197,10 +198,54 @@ class LineChartData extends AxisChartData with EquatableMixin {
         clipData,
         backgroundColor,
       ];
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LineChartData &&
+          runtimeType == other.runtimeType &&
+          lineBarsData == other.lineBarsData &&
+          betweenBarsData == other.betweenBarsData &&
+          titlesData == other.titlesData &&
+          extraLinesData == other.extraLinesData &&
+          lineTouchData == other.lineTouchData &&
+          showingTooltipIndicators == other.showingTooltipIndicators &&
+          gridData == other.gridData &&
+          borderData == other.borderData &&
+          rangeAnnotations == other.rangeAnnotations &&
+          minX == other.minX &&
+          maxX == other.maxX &&
+          baselineX == other.baselineX &&
+          minY == other.minY &&
+          maxY == other.maxY &&
+          baselineY == other.baselineY &&
+          clipData == other.clipData &&
+          backgroundColor == other.backgroundColor;
+
+  @override
+  int get hashCode =>
+      lineBarsData.hashCode ^
+      betweenBarsData.hashCode ^
+      titlesData.hashCode ^
+      extraLinesData.hashCode ^
+      lineTouchData.hashCode ^
+      showingTooltipIndicators.hashCode ^
+      gridData.hashCode ^
+      borderData.hashCode ^
+      rangeAnnotations.hashCode ^
+      minX.hashCode ^
+      maxX.hashCode ^
+      baselineX.hashCode ^
+      minY.hashCode ^
+      maxY.hashCode ^
+      baselineY.hashCode ^
+      clipData.hashCode ^
+      backgroundColor.hashCode;
 }
 
 /// Holds data for drawing each individual line in the [LineChart]
-class LineChartBarData with EquatableMixin {
+@immutable
+class LineChartBarData {
   /// [BarChart] draws some lines and overlaps them in the chart's view,
   /// You can have multiple lines by splitting them,
   /// put a [FlSpot.nullSpot] between each section.
@@ -276,11 +321,11 @@ class LineChartBarData with EquatableMixin {
         isStrokeJoinRound = isStrokeJoinRound ?? false,
         belowBarData = belowBarData ?? BarAreaData(),
         aboveBarData = aboveBarData ?? BarAreaData(),
-        dotData = dotData ?? FlDotData(),
+        dotData = dotData ?? const FlDotData(),
         showingIndicators = showingIndicators ?? const [],
         shadow = shadow ?? const Shadow(color: Colors.transparent),
         isStepLineChart = isStepLineChart ?? false,
-        lineChartStepData = lineChartStepData ?? LineChartStepData() {
+        lineChartStepData = lineChartStepData ?? const LineChartStepData() {
     FlSpot? mostLeft;
     FlSpot? mostTop;
     FlSpot? mostRight;
@@ -291,7 +336,7 @@ class LineChartBarData with EquatableMixin {
       firstValidSpot =
           this.spots.firstWhere((element) => element != FlSpot.nullSpot);
     } catch (e) {
-      // There is no valid spot
+// There is no valid spot
     }
     if (firstValidSpot != null) {
       for (final spot in this.spots) {
@@ -481,35 +526,60 @@ class LineChartBarData with EquatableMixin {
     );
   }
 
-  /// Used for equality check, see [EquatableMixin].
   @override
-  List<Object?> get props => [
-        spots,
-        show,
-        color,
-        gradient,
-        barWidth,
-        isCurved,
-        curveSmoothness,
-        preventCurveOverShooting,
-        preventCurveOvershootingThreshold,
-        isStrokeCapRound,
-        isStrokeJoinRound,
-        belowBarData,
-        aboveBarData,
-        dotData,
-        showingIndicators,
-        dashArray,
-        shadow,
-        isStepLineChart,
-        lineChartStepData,
-      ];
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LineChartBarData &&
+          runtimeType == other.runtimeType &&
+          show == other.show &&
+          spots == other.spots &&
+          color == other.color &&
+          gradient == other.gradient &&
+          barWidth == other.barWidth &&
+          curveSmoothness == other.curveSmoothness &&
+          preventCurveOverShooting == other.preventCurveOverShooting &&
+          preventCurveOvershootingThreshold ==
+              other.preventCurveOvershootingThreshold &&
+          isStrokeCapRound == other.isStrokeCapRound &&
+          isStrokeJoinRound == other.isStrokeJoinRound &&
+          belowBarData == other.belowBarData &&
+          aboveBarData == other.aboveBarData &&
+          dotData == other.dotData &&
+          showingIndicators == other.showingIndicators &&
+          dashArray == other.dashArray &&
+          shadow == other.shadow &&
+          isStepLineChart == other.isStepLineChart &&
+          lineChartStepData == other.lineChartStepData &&
+          isCurved == other.isCurved;
+
+  @override
+  int get hashCode =>
+      show.hashCode ^
+      spots.hashCode ^
+      color.hashCode ^
+      gradient.hashCode ^
+      barWidth.hashCode ^
+      curveSmoothness.hashCode ^
+      isCurved.hashCode ^
+      preventCurveOverShooting.hashCode ^
+      preventCurveOvershootingThreshold.hashCode ^
+      isStrokeCapRound.hashCode ^
+      isStrokeJoinRound.hashCode ^
+      belowBarData.hashCode ^
+      aboveBarData.hashCode ^
+      dotData.hashCode ^
+      showingIndicators.hashCode ^
+      dashArray.hashCode ^
+      shadow.hashCode ^
+      isStepLineChart.hashCode ^
+      lineChartStepData.hashCode;
 }
 
 /// Holds data for representing a Step Line Chart, and works only if [LineChartBarData.isStepChart] is true.
-class LineChartStepData with EquatableMixin {
+@immutable
+class LineChartStepData {
   /// Determines the [stepDirection] of each step;
-  LineChartStepData({this.stepDirection = stepDirectionMiddle});
+  const LineChartStepData({this.stepDirection = stepDirectionMiddle});
 
   /// Go to the next spot directly, with the current point's y value.
   static const stepDirectionForward = 0.0;
@@ -534,13 +604,20 @@ class LineChartStepData with EquatableMixin {
     );
   }
 
-  /// Used for equality check, see [EquatableMixin].
   @override
-  List<Object?> get props => [stepDirection];
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LineChartStepData &&
+          runtimeType == other.runtimeType &&
+          stepDirection == other.stepDirection;
+
+  @override
+  int get hashCode => stepDirection.hashCode;
 }
 
 /// Holds data for filling an area (above or below) of the line with a color or gradient.
-class BarAreaData with EquatableMixin {
+@immutable
+class BarAreaData {
   /// if [show] is true, [LineChart] fills above and below area of each line
   /// with a color or gradient.
   ///
@@ -567,7 +644,7 @@ class BarAreaData with EquatableMixin {
             ((color == null && gradient == null)
                 ? Colors.blueGrey.withOpacity(0.5)
                 : null),
-        spotsLine = spotsLine ?? BarAreaSpotsLine(),
+        spotsLine = spotsLine ?? const BarAreaSpotsLine(),
         cutOffY = cutOffY ?? 0,
         applyCutOffY = applyCutOffY ?? false,
         assert(applyCutOffY == true ? cutOffY != null : true);
@@ -598,23 +675,34 @@ class BarAreaData with EquatableMixin {
       show: b.show,
       spotsLine: BarAreaSpotsLine.lerp(a.spotsLine, b.spotsLine, t),
       color: Color.lerp(a.color, b.color, t),
-      // ignore: invalid_use_of_protected_member
+// ignore: invalid_use_of_protected_member
       gradient: Gradient.lerp(a.gradient, b.gradient, t),
       cutOffY: lerpDouble(a.cutOffY, b.cutOffY, t),
       applyCutOffY: b.applyCutOffY,
     );
   }
 
-  /// Used for equality check, see [EquatableMixin].
   @override
-  List<Object?> get props => [
-        show,
-        color,
-        gradient,
-        spotsLine,
-        cutOffY,
-        applyCutOffY,
-      ];
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BarAreaData &&
+            runtimeType == other.runtimeType &&
+            show == other.show &&
+            color == other.color &&
+            gradient == other.gradient &&
+            spotsLine == other.spotsLine &&
+            cutOffY == other.cutOffY &&
+            applyCutOffY == other.applyCutOffY;
+  }
+
+  @override
+  int get hashCode =>
+      show.hashCode ^
+      color.hashCode ^
+      gradient.hashCode ^
+      spotsLine.hashCode ^
+      cutOffY.hashCode ^
+      applyCutOffY.hashCode;
 }
 
 /// Holds data about filling below or above space of the bar line,
@@ -666,17 +754,18 @@ class BetweenBarsData with EquatableMixin {
 }
 
 /// Holds data for drawing line on the spots under the [BarAreaData].
-class BarAreaSpotsLine with EquatableMixin {
+@immutable
+class BarAreaSpotsLine {
   /// If [show] is true, [LineChart] draws some lines on above or below the spots,
   /// you can customize the appearance of the lines using [flLineStyle]
   /// and you can decide to show or hide the lines on each spot using [checkToShowSpotLine].
-  BarAreaSpotsLine({
+  const BarAreaSpotsLine({
     bool? show,
     FlLine? flLineStyle,
     CheckToShowSpotLine? checkToShowSpotLine,
     bool? applyCutOffY,
   })  : show = show ?? false,
-        flLineStyle = flLineStyle ?? FlLine(),
+        flLineStyle = flLineStyle ?? const FlLine(),
         checkToShowSpotLine = checkToShowSpotLine ?? showAllSpotsBelowLine,
         applyCutOffY = applyCutOffY ?? true;
 
@@ -706,14 +795,23 @@ class BarAreaSpotsLine with EquatableMixin {
     );
   }
 
-  /// Used for equality check, see [EquatableMixin].
   @override
-  List<Object?> get props => [
-        show,
-        flLineStyle,
-        checkToShowSpotLine,
-        applyCutOffY,
-      ];
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is BarAreaSpotsLine &&
+            runtimeType == other.runtimeType &&
+            show == other.show &&
+            checkToShowSpotLine == other.checkToShowSpotLine &&
+            flLineStyle == other.flLineStyle &&
+            applyCutOffY == other.applyCutOffY;
+  }
+
+  @override
+  int get hashCode =>
+      show.hashCode ^
+      checkToShowSpotLine.hashCode ^
+      flLineStyle.hashCode ^
+      applyCutOffY.hashCode;
 }
 
 /// It used for determine showing or hiding [BarAreaSpotsLine]s
@@ -796,11 +894,12 @@ FlDotPainter _defaultGetDotPainter(
 }
 
 /// This class holds data about drawing spot dots on the drawing bar line.
-class FlDotData with EquatableMixin {
+@immutable
+class FlDotData {
   /// set [show] false to prevent dots from drawing,
   /// if you want to show or hide dots in some spots,
   /// override [checkToShowDot] to handle it in your way.
-  FlDotData({
+  const FlDotData({
     bool? show,
     CheckToShowDot? checkToShowDot,
     GetDotPainterCallback? getDotPainter,
@@ -827,13 +926,18 @@ class FlDotData with EquatableMixin {
     );
   }
 
-  /// Used for equality check, see [EquatableMixin].
   @override
-  List<Object?> get props => [
-        show,
-        checkToShowDot,
-        getDotPainter,
-      ];
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FlDotData &&
+          runtimeType == other.runtimeType &&
+          show == other.show &&
+          checkToShowDot == other.checkToShowDot &&
+          getDotPainter == other.getDotPainter;
+
+  @override
+  int get hashCode =>
+      show.hashCode ^ checkToShowDot.hashCode ^ getDotPainter.hashCode;
 }
 
 /// This class contains the interface that all DotPainters should conform to.
@@ -1380,7 +1484,8 @@ class SizedPicture with EquatableMixin {
 }
 
 /// Draws some straight horizontal or vertical lines in the [LineChart]
-class ExtraLinesData with EquatableMixin {
+@immutable
+class ExtraLinesData {
   /// [LineChart] draws some straight horizontal or vertical lines,
   /// you should set [LineChartData.extraLinesData].
   /// Draws horizontal lines using [horizontalLines],
@@ -1388,7 +1493,7 @@ class ExtraLinesData with EquatableMixin {
   ///
   /// If [extraLinesOnTop] sets true, it draws the line above the main bar lines, otherwise
   /// it draws them below the main bar lines.
-  ExtraLinesData({
+  const ExtraLinesData({
     List<HorizontalLine>? horizontalLines,
     List<VerticalLine>? verticalLines,
     bool? extraLinesOnTop,
@@ -1410,13 +1515,21 @@ class ExtraLinesData with EquatableMixin {
     );
   }
 
-  /// Used for equality check, see [EquatableMixin].
   @override
-  List<Object?> get props => [
-        horizontalLines,
-        verticalLines,
-        extraLinesOnTop,
-      ];
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is ExtraLinesData &&
+            runtimeType == other.runtimeType &&
+            extraLinesOnTop == other.extraLinesOnTop &&
+            verticalLines == other.verticalLines &&
+            horizontalLines == other.horizontalLines;
+  }
+
+  @override
+  int get hashCode =>
+      extraLinesOnTop.hashCode ^
+      verticalLines.hashCode ^
+      horizontalLines.hashCode;
 }
 
 /// Holds data to handle touch events, and touch responses in the [LineChart].
@@ -1424,7 +1537,8 @@ class ExtraLinesData with EquatableMixin {
 /// There is a touch flow, explained [here](https://github.com/imaNNeoFighT/fl_chart/blob/master/repo_files/documentations/handle_touches.md)
 /// in a simple way, each chart's renderer captures the touch events, and passes the pointerEvent
 /// to the painter, and gets touched spot, and wraps it into a concrete [LineTouchResponse].
-class LineTouchData extends FlTouchData<LineTouchResponse> with EquatableMixin {
+@immutable
+class LineTouchData extends FlTouchData<LineTouchResponse> {
   /// You can disable or enable the touch system using [enabled] flag,
   ///
   /// [touchCallback] notifies you about the happened touch/pointer events.
@@ -1516,20 +1630,34 @@ class LineTouchData extends FlTouchData<LineTouchResponse> with EquatableMixin {
     );
   }
 
-  /// Used for equality check, see [EquatableMixin].
   @override
-  List<Object?> get props => [
-        enabled,
-        touchCallback,
-        mouseCursorResolver,
-        touchTooltipData,
-        getTouchedSpotIndicator,
-        touchSpotThreshold,
-        distanceCalculator,
-        handleBuiltInTouches,
-        getTouchLineStart,
-        getTouchLineEnd,
-      ];
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LineTouchData &&
+          runtimeType == other.runtimeType &&
+          enabled == other.enabled &&
+          touchCallback == other.touchCallback &&
+          mouseCursorResolver == other.mouseCursorResolver &&
+          touchTooltipData == other.touchTooltipData &&
+          getTouchedSpotIndicator == other.getTouchedSpotIndicator &&
+          touchSpotThreshold == other.touchSpotThreshold &&
+          distanceCalculator == other.distanceCalculator &&
+          handleBuiltInTouches == other.handleBuiltInTouches &&
+          getTouchLineStart == other.getTouchLineStart &&
+          getTouchLineEnd == other.getTouchLineEnd;
+
+  @override
+  int get hashCode =>
+      enabled.hashCode ^
+      touchCallback.hashCode ^
+      mouseCursorResolver.hashCode ^
+      touchTooltipData.hashCode ^
+      getTouchedSpotIndicator.hashCode ^
+      touchSpotThreshold.hashCode ^
+      distanceCalculator.hashCode ^
+      handleBuiltInTouches.hashCode ^
+      getTouchLineStart.hashCode ^
+      getTouchLineEnd.hashCode;
 }
 
 /// Used for showing touch indicators (a thicker line and larger dot on the targeted spot).
@@ -1599,7 +1727,8 @@ double defaultGetTouchLineEnd(LineChartBarData barData, int spotIndex) {
 }
 
 /// Holds representation data for showing tooltip popup on top of spots.
-class LineTouchTooltipData with EquatableMixin {
+@immutable
+class LineTouchTooltipData {
   /// if [LineTouchData.handleBuiltInTouches] is true,
   /// [LineChart] shows a tooltip popup on top of spots automatically when touch happens,
   /// otherwise you can show it manually using [LineChartData.showingTooltipIndicators].
@@ -1672,21 +1801,37 @@ class LineTouchTooltipData with EquatableMixin {
   /// The tooltip border color.
   final BorderSide tooltipBorder;
 
-  /// Used for equality check, see [EquatableMixin].
   @override
-  List<Object?> get props => [
-        tooltipBgColor,
-        tooltipRoundedRadius,
-        tooltipPadding,
-        tooltipMargin,
-        maxContentWidth,
-        getTooltipItems,
-        fitInsideHorizontally,
-        fitInsideVertically,
-        showOnTopOfTheChartBoxArea,
-        rotateAngle,
-        tooltipBorder,
-      ];
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LineTouchTooltipData &&
+          runtimeType == other.runtimeType &&
+          tooltipBgColor == other.tooltipBgColor &&
+          tooltipRoundedRadius == other.tooltipRoundedRadius &&
+          tooltipPadding == other.tooltipPadding &&
+          tooltipMargin == other.tooltipMargin &&
+          maxContentWidth == other.maxContentWidth &&
+          getTooltipItems == other.getTooltipItems &&
+          fitInsideHorizontally == other.fitInsideHorizontally &&
+          fitInsideVertically == other.fitInsideVertically &&
+          showOnTopOfTheChartBoxArea == other.showOnTopOfTheChartBoxArea &&
+          rotateAngle == other.rotateAngle &&
+          tooltipBorder == other.tooltipBorder;
+
+  @override
+  int get hashCode =>
+      runtimeType.hashCode ^
+      tooltipBgColor.hashCode ^
+      tooltipRoundedRadius.hashCode ^
+      tooltipPadding.hashCode ^
+      tooltipMargin.hashCode ^
+      maxContentWidth.hashCode ^
+      getTooltipItems.hashCode ^
+      fitInsideHorizontally.hashCode ^
+      fitInsideVertically.hashCode ^
+      showOnTopOfTheChartBoxArea.hashCode ^
+      rotateAngle.hashCode ^
+      tooltipBorder.hashCode;
 }
 
 /// Provides a [LineTooltipItem] for showing content inside the [LineTouchTooltipData].
