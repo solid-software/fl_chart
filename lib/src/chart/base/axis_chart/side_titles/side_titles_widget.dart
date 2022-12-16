@@ -249,7 +249,8 @@ class _AxisTitleWidget extends StatelessWidget {
     return SizedBox(
       width: isHorizontal ? axisViewSize : axisTitles.axisNameSize,
       height: isHorizontal ? axisTitles.axisNameSize : axisViewSize,
-      child: Center(
+      child: Align(
+        alignment: axisTitles.axisNameWidgetAlignment,
         child: RotatedBox(
           quarterTurns: axisNameQuarterTurns,
           child: axisTitles.axisNameWidget,

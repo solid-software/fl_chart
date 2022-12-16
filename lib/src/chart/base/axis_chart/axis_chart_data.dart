@@ -225,8 +225,9 @@ class AxisTitles {
   /// [axisNameSize] determines the maximum size that [axisName] can use
   ///
   /// [sideTitles] property is responsible to show your axis side labels
-  AxisTitles({
+  AxisTitles( {
     this.axisNameWidget,
+    this.axisNameWidgetAlignment = Alignment.center,
     double? axisNameSize,
     SideTitles? sideTitles,
     bool? drawBehindEverything,
@@ -240,6 +241,8 @@ class AxisTitles {
   /// It shows the name of axis, for example your x-axis shows year,
   /// then you might want to show it using [axisNameWidget] property as a widget
   final Widget? axisNameWidget;
+
+  final Alignment axisNameWidgetAlignment;
 
   /// It is responsible to show your axis side labels.
   final SideTitles sideTitles;
