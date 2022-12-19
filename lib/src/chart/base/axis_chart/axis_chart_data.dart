@@ -227,6 +227,7 @@ class AxisTitles {
   /// [sideTitles] property is responsible to show your axis side labels
   AxisTitles({
     this.axisNameWidget,
+    this.axisNameWidgetAlignment = Alignment.center,
     double? axisNameSize,
     SideTitles? sideTitles,
     bool? drawBehindEverything,
@@ -240,6 +241,9 @@ class AxisTitles {
   /// It shows the name of axis, for example your x-axis shows year,
   /// then you might want to show it using [axisNameWidget] property as a widget
   final Widget? axisNameWidget;
+
+  /// Aligns the [axisNameWidget] along the axis.
+  final Alignment axisNameWidgetAlignment;
 
   /// It is responsible to show your axis side labels.
   final SideTitles sideTitles;
@@ -400,7 +404,7 @@ class FlTitlesData {
 
 /// Represents a conceptual position in cartesian (axis based) space.
 @immutable
-class FlSpot{
+class FlSpot {
   /// [x] determines cartesian (axis based) horizontally position
   /// 0 means most left point of the chart
   ///
@@ -440,7 +444,6 @@ class FlSpot{
 
   /// Determines if [x] and [y] is not null.
   bool isNotNull() => !isNull();
-
 
   @override
   bool operator ==(Object other) =>
