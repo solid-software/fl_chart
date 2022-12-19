@@ -111,7 +111,7 @@ class SideTitlesWidget extends StatelessWidget {
     double axisMax,
     AxisSide side,
   ) {
-    List<AxisSideTitleMetaData> axisPositions;
+    Iterable<AxisSideTitleMetaData> axisPositions;
     final interval = sideTitles.interval ??
         Utils().getEfficientInterval(
           axisViewSize,
@@ -128,7 +128,7 @@ class SideTitlesWidget extends StatelessWidget {
         final xLocation = e.value;
         final xValue = barChartData.barGroups[index].x;
         return AxisSideTitleMetaData(xValue.toDouble(), xLocation);
-      }).toList();
+      });
     } else {
       final axisValues = AxisChartHelper().iterateThroughAxis(
         min: axisMin,
@@ -147,8 +147,9 @@ class SideTitlesWidget extends StatelessWidget {
         }
         final axisLocation = portion * axisViewSize;
         return AxisSideTitleMetaData(axisValue, axisLocation);
-      }).toList();
+      });
     }
+    const empty = '';
     return axisPositions.map(
       (metaData) {
         return AxisSideTitleWidgetHolder(
@@ -160,7 +161,7 @@ class SideTitlesWidget extends StatelessWidget {
               max: axisMax,
               appliedInterval: interval,
               sideTitles: sideTitles,
-              formattedValue: Utils().formatNumber(metaData.axisValue),
+              formattedValue: empty, //Utils().formatNumber(metaData.axisValue),
               axisSide: side,
             ),
           ),
