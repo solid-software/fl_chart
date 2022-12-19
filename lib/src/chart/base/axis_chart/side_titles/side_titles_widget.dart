@@ -15,6 +15,7 @@ class SideTitlesWidget extends StatelessWidget {
     required this.axisChartData,
     required this.parentSize,
   });
+
   final AxisSide side;
   final AxisChartData axisChartData;
   final Size parentSize;
@@ -161,7 +162,7 @@ class SideTitlesWidget extends StatelessWidget {
               max: axisMax,
               appliedInterval: interval,
               sideTitles: sideTitles,
-              formattedValue: empty, //Utils().formatNumber(metaData.axisValue),
+              formattedValue: empty,
               axisSide: side,
             ),
           ),
@@ -226,6 +227,7 @@ class _AxisTitleWidget extends StatelessWidget {
     required this.side,
     required this.axisViewSize,
   });
+
   final AxisTitles axisTitles;
   final AxisSide side;
   final double axisViewSize;

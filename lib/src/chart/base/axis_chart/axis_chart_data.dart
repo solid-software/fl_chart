@@ -225,7 +225,7 @@ class AxisTitles {
   /// [axisNameSize] determines the maximum size that [axisName] can use
   ///
   /// [sideTitles] property is responsible to show your axis side labels
-  AxisTitles( {
+  AxisTitles({
     this.axisNameWidget,
     this.axisNameWidgetAlignment = Alignment.center,
     double? axisNameSize,
@@ -242,6 +242,7 @@ class AxisTitles {
   /// then you might want to show it using [axisNameWidget] property as a widget
   final Widget? axisNameWidget;
 
+  /// Aligns the [axisNameWidget] along the axis.
   final Alignment axisNameWidgetAlignment;
 
   /// It is responsible to show your axis side labels.
@@ -403,7 +404,7 @@ class FlTitlesData {
 
 /// Represents a conceptual position in cartesian (axis based) space.
 @immutable
-class FlSpot{
+class FlSpot {
   /// [x] determines cartesian (axis based) horizontally position
   /// 0 means most left point of the chart
   ///
@@ -443,7 +444,6 @@ class FlSpot{
 
   /// Determines if [x] and [y] is not null.
   bool isNotNull() => !isNull();
-
 
   @override
   bool operator ==(Object other) =>
